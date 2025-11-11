@@ -1,0 +1,21 @@
+# LaTeX build artifacts
+*.aux
+*.log
+*.out
+*.toc
+*.nav
+*.snm
+*.vrb
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+*.bbl
+*.blg
+
+# PDFs (generated artifacts, available via CI/CD)
+*.pdf
+
+# Backup files
+*~
+*.bak
+*.swp
