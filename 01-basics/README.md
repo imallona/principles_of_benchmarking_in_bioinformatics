@@ -26,15 +26,7 @@ Requirements for local compilation:
 
 ### Exercises (`exercises/exercises.md`)
 
-A structured Q&A document with 25+ questions covering all topics from the slides:
-
-- Section 1: Text and executable Files (5 questions)
-- Section 2: Snakemake Workflows (5 questions)
-- Section 3: Conda package management (5 questions)
-- Section 4: Singularity containers (5 questions)
-- Section 5: Integration and best practices (5 questions)
-- Practical exercises
-- Additional resources and tips
+A structured Q&A document with 25+ questions covering all topics from the slides. Including extra hands-on exercises, and additional resources and tips
 
 ## Prerequisites
 

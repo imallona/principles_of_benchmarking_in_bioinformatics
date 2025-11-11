@@ -60,3 +60,7 @@ This repository uses GitHub Actions to automatically:
 ## Contributing
 
 This is an active project not yet open for contributions.
+
+## Contact
+
+izaskun.mallona at gmail.com

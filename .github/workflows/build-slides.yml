@@ -20,7 +20,7 @@ jobs:
       - name: Compile LaTeX document
         uses: xu-cheng/latex-action@v3
         with:
-          root_file: 01-basics.tex
+          root_file: basics.tex
           working_directory: 01-basics/slides
           latexmk_use_lualatex: false
           latexmk_shell_escape: false
