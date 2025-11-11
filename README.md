@@ -40,7 +40,7 @@ Introduction to fundamental bioinformatics concepts:
 - Workflow management
 - Software management: conda and apptainer
 
-See [basics/README.md](1-basics/README.md) for details.
+See [01-basics/README.md](01-basics/README.md) for details.
 
 Compiled PDF slides are automatically built via GitHub Actions and available as artifacts:
 1. Go to the [Actions tab](../../actions)

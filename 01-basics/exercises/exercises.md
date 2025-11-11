@@ -77,7 +77,7 @@ export PATH="/my/custom/bin:$PATH"
 ```
 
 > [!IMPORTANT]
-> This concept is crucial for understanding how conda and apptainer manage software.
+> This concept is crucial for understanding how conda and apptainer manage software. (Yes, it's largely changing the $PATH.)
 
 ---
 
@@ -152,7 +152,7 @@ Complete workflow:
 
 ```bash
 # 1. Edit your files
-emacs script.py # you can use vim (!), nano, or any other editor
+emacs script.py # you can use vim, nano, or any other editor
 
 # 2. Check what changed
 git status
@@ -207,8 +207,8 @@ YAML (YAML Ain't Markup Language) is a human-readable data serialization format 
 #### Q3.2: What are the critical rules for YAML indentation?
 
 Answer:
-1. Use spaces, never tabs! Tabs will cause syntax errors
-2. Consistent indentation: Usually 2 spaces per level
+1. Use spaces and avoid tabs. Tabs will cause syntax errors
+2. Use consistent indentation: Usually two spaces per level
 3. Alignment matters: Items at the same level must have the same indentation
 4. Colons: Key-value pairs use `key: value` format
 
@@ -409,7 +409,7 @@ Conda is especially important for data analysis because:
 
 
 > [!NOTE]  
-> Conda modifies the PATH to point to the "right" software versions
+> Conda is a package manager, so it downloads software executables, but it also modifies the PATH to point to the "right" software versions (hence handling software environments)
 
 
 #### Q5.2: What is the difference between `conda create` and `conda install`?
@@ -502,7 +502,7 @@ Why this matters:
 - Deactivating restores the original PATH
 
 > [!WARNING]  
-> This is extremely important. Always deactivate conda environments, and avoid nesting them.
+> Always check whether a conda environment is active and deactivate it if not required. Avoid nesting conda environments inside other conda environments. To diagnose the status of your PATH during conda activations and dectivations do `echo $PATH` to print it.
 
 
 #### Q5.6: How do you integrate conda environments with Snakemake?

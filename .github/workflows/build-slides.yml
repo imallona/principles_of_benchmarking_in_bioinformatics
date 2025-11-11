@@ -3,7 +3,7 @@ name: Build beamer slides
 on:
   pull_request:
     paths:
-      - 'basics/slides/*.tex'
+      - '*/slides/*.tex'
       - '.github/workflows/build-slides.yml'
   workflow_dispatch:
 
