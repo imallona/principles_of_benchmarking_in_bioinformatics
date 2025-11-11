@@ -1,0 +1,44 @@
+name: Build beamer slides
+
+on:
+  pull_request:
+    paths:
+      - 'basics/slides/*.tex'
+      - '.github/workflows/build-slides.yml'
+  workflow_dispatch:
+
+jobs:
+  build-pdf:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Compile LaTeX document
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: basics.tex
+          working_directory: 01-basics/slides
+          latexmk_use_lualatex: false
+          latexmk_shell_escape: false
+          args: -pdf -interaction=nonstopmode -file-line-error
+        
+      - name: Upload PDF artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: 01-basics-slides-pdf
+          path: 01-basics/slides/basics.pdf
+          retention-days: 90
+      
+      - name: Check if PDF was created
+        run: |
+          if [ -f 01-basics/slides/basics.pdf ]; then
+            echo "PDF successfully created"
+            ls -lh 01-basics/slides/basics.pdf
+          else
+            echo "PDF creation failed"
+            exit 1
+          fi
