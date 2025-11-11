@@ -12,6 +12,7 @@
     basicstyle=\ttfamily\footnotesize,
     breaklines=true,
     frame=single,
+    showstringspaces=false,
     backgroundcolor=\color{gray!10},
     keywordstyle=\color{blue},
     commentstyle=\color{green!50!black},
@@ -35,8 +36,8 @@
 
 \begin{frame}{Aim}
   \begin{itemize}
-  \item Warm-up for exercises
-  \item Seed discussion
+  \item Concepts: reproducible workflows and automation
+  \item Tech: files, \$PATH, YAML, apptainer, conda, Snakemake, Omnibenchmark
   \end{itemize}
 \end{frame}
 
@@ -57,14 +58,14 @@
         \begin{itemize}
             \item Binary format
             \item Machine-readable instructions
-            \item Platform-specific (Linux amd64)
+            \item Platform-specific (e.g., Linux amd64)
             \item Require execute permissions
             \item Examples: compiled programs
         \end{itemize}
     \end{columns}
 \end{frame}
 
-\begin{frame}[fragile]{File Permissions in Linux}
+\begin{frame}[fragile]{File permissions in Linux}
     \begin{lstlisting}[language=bash]
 # View file permissions
 ls -l myfile.txt
@@ -86,7 +87,7 @@ file myfile
     \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{The \$PATH Environment Variable}
+\begin{frame}[fragile]{The \$PATH environment variable}
     \textbf{Where does Linux find executables?}
     
     The \texttt{\$PATH} variable tells Linux where to look for executable programs.
@@ -106,12 +107,12 @@ which python
     \begin{itemize}
         \item Directories are separated by colons (\texttt{:})
         \item Order matters - first match wins
-        \item Software "lives" in directories listed in \texttt{\$PATH}
+        \item Software (executables!) "lives" in directories listed in \texttt{\$PATH}
         \item Can be modified temporarily or permanently
     \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{Understanding Where Software Lives}
+\begin{frame}[fragile]{Understanding where executables live}
     \begin{lstlisting}[language=bash]
 # Find where a program is located
 which python
@@ -129,7 +130,7 @@ export PATH="/my/custom/bin:$PATH"
 \end{lstlisting}
     
     \vspace{0.3cm}
-    This is crucial for understanding Conda and Singularity environments!
+    This is crucial for understanding conda and apptainer
 \end{frame}
 
 % \section{Git: local vs remote}
@@ -146,13 +147,6 @@ export PATH="/my/custom/bin:$PATH"
         \item \textbf{Collaboration}: Multiple people can work on the same project
     \end{itemize}
     
-    \vspace{0.3cm}
-    \textbf{Why use Git?}
-    \begin{itemize}
-        \item Never lose work
-        \item Experiment safely
-        \item Collaborate effectively
-    \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]{Local vs. remote repository}
@@ -188,7 +182,7 @@ git pull origin main
 \end{lstlisting}
     
     \vspace{0.3cm}
-    \textbf{Remember:} Changes stay local until you \texttt{push}!
+    \textbf{Remember:} Changes stay local until you \texttt{push}
 \end{frame}
 
 \begin{frame}[fragile]{Git workflow explained}
@@ -239,7 +233,7 @@ git pull  # Get changes from others
 \end{frame}
 
 \begin{frame}[fragile]{YAML basics: Indentation Rules}
-    \textbf{Critical Rule:} YAML uses \textbf{spaces for indentation}, never tabs!
+    \textbf{Critical Rule:} YAML uses \textbf{spaces for indentation}, avoid tabs
     
     \begin{lstlisting}
 # Key-value pairs
@@ -260,8 +254,6 @@ workflow:
     results: output.txt
 \end{lstlisting}
     
-    \vspace{0.2cm}
-    \textbf{Important:} Consistent indentation (usually 2 spaces) is essential!
 \end{frame}
 
 \begin{frame}[fragile]{YAML: common patterns}
@@ -296,7 +288,6 @@ key: value  # inline comment
     \textbf{Snakemake} is a workflow management system for reproducible and scalable data analyses
     
     \vspace{0.5cm}
-    \textbf{Key Features:}
     \begin{itemize}
         \item Python-based syntax
         \item Automatic parallelization
@@ -305,14 +296,6 @@ key: value  # inline comment
         \item Integration with Conda and Singularity
     \end{itemize}
     
-    \vspace{0.3cm}
-    \textbf{Why use workflows?}
-    \begin{itemize}
-        \item Reproducibility
-        \item Automation
-        \item Scalability
-        \item Documentation
-    \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]{Snakemake Basics: Rules}
@@ -378,7 +361,7 @@ snakemake --configfile config.yaml --cores 4
 % \section{Conda}
 
 \begin{frame}{What is Conda?}
-    \textbf{Conda} is a package and environment management system
+    \textbf{Conda} is a package and environment (e.g., PATH) management system
     
     \vspace{0.5cm}
     \textbf{Benefits:}
@@ -390,13 +373,6 @@ snakemake --configfile config.yaml --cores 4
         \item Cross-platform (Linux, macOS, Windows) (they claim)
     \end{itemize}
     
-    \vspace{0.3cm}
-    \textbf{Bioconda Channel:}
-    \begin{itemize}
-        \item 9000+ bioinformatics packages
-        \item Community-maintained
-        \item Continuously tested
-    \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]{Conda basics}
@@ -439,13 +415,13 @@ echo $PATH
     \vspace{0.3cm}
     \textbf{This means:}
     \begin{itemize}
-        \item Software in the active environment is found first
+        \item Software in the active environment is found first (PATH)
         \item Each environment has its own \texttt{bin/} directory
-        \item Environments are \textbf{isolated} - no conflicts! (they claim)
+        \item Environments are isolated - no conflicts (they claim)
     \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{Conda Environment Files}
+\begin{frame}[fragile]{Conda environment YAML files}
     \textbf{environment.yml} - reproducible environment specification
     
     \begin{lstlisting}
@@ -503,16 +479,16 @@ snakemake --use-conda --cores 8
     \vspace{0.3cm}
     \textbf{Singularity vs. Docker:}
     \begin{itemize}
-        \item No root daemon required
-        \item User permissions preserved
-        \item HPC-friendly
+        \item No root daemon required, so HPC-friendly
         \item Can run Docker images
+          \item Singularity doesn't run on MacOS; Docker does
     \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{Singularity Basics}
-    \begin{lstlisting}[language=bash]
+\begin{frame}[fragile]{Singularity basics}
+  \begin{lstlisting}[language=bash]
 # Pull an image from Docker Hub
+#  (singularity-native registries also exist)
 singularity pull docker://python:3.10-slim
 
 # Run a command in a container
@@ -551,7 +527,7 @@ From: ubuntu:22.04
 \end{frame}
 
 \begin{frame}[fragile]{Singularity and \$PATH}
-    \textbf{Containers have their own \$PATH}
+    Containers have their own \$PATH
     
     Inside a Singularity container, software locations are isolated:
     
@@ -594,26 +570,18 @@ snakemake --use-singularity --cores 8
 
 % \section{Putting It All Together}
 
-\begin{frame}{Reproducible Bioinformatics Workflow}
+\begin{frame}{Components of reproducible workflows}
     \begin{enumerate}
         \item \textbf{Version control} (Git) for code and scripts
         \item \textbf{Workflow management} (Snakemake) for automation
         \item \textbf{Environment management} (Conda/Singularity) for dependencies
         \item \textbf{Documentation} for methods and parameters
-          \item
+          \pause
         \item \textbf{Testing} to validate results
           \pause
         \item What about benchmarking?
     \end{enumerate}
     
-    \vspace{0.5cm}
-    \textbf{Best practices:}
-    \begin{itemize}
-        \item Use text (and open) formats when possible (easier to track)
-        \item Document all software versions
-        \item Share complete environments
-        \item Test on different systems
-    \end{itemize}
 \end{frame}
 
 % \section{Omnibenchmark}
@@ -624,25 +592,24 @@ snakemake --use-singularity --cores 8
     \vspace{0.5cm}
     \textbf{Key Features:}
     \begin{itemize}
-        \item Modular benchmark design
+        \item Formal description of benchmark design and components
         \item Automated workflow execution
-        \item Continuous updates when new data/methods added
-        \item Uses all the tools we've discussed!
+        \item Benchmarking-inspired features (profiling, visualization, attribution, etc)
+        \item Uses all the tools we've discussed
     \end{itemize}
   \end{frame}
   
 \begin{frame}{Summary}
     \begin{itemize}
-        \item \textbf{Text vs. Executable Files}: Understanding file types is crucial for data analysis
+        \item \textbf{Text vs. executable files}: Understanding file types is crucial for data analysis
+        \item \textbf{PATH}: Defines which executables are found, and when
         \item \textbf{YAML}: Human-readable configuration with proper indentation
         \item \textbf{Snakemake}: Automates complex workflows with dependency tracking
         \item \textbf{Conda}: Manages software and environments reproducibly
         \item \textbf{Singularity}: Provides complete containerized environments for HPC
-        \item \textbf{Omnibenchmark}: Integrates all these tools for continuous benchmarking
+        \item \textbf{Omnibenchmark}: Integrates these to ease benchmarking (they claim)
     \end{itemize}
     
-    \vspace{0.5cm}
-    \textbf{Key Takeaway:} Combining these tools creates reproducible, scalable bioinformatics pipelines suitable for benchmarking and production analyses.
 \end{frame}
 
 \begin{frame}{Resources}
