@@ -14,7 +14,7 @@ Bias disclaimer: authors (Izaskun Mallona) are developers of Omnibenchmark (sinc
 │   │   └── basics.tex
 │   ├── exercises/               # Q&A exercises
 │   │   └── exercises.md
-│   └── README.md               # Unit documentation
+│   └── README.md                # Unit documentation
 ├── 02-benchmark-design
 │   └── TO-DO.md
 ├── 03-ethical-benchmarking
@@ -23,8 +23,9 @@ Bias disclaimer: authors (Izaskun Mallona) are developers of Omnibenchmark (sinc
 │   └── TO-DO.md
 ├── 05-openebench
 │   └── TO-DO.md
-├── 06-omnibenchmark
-│   └── TO-DO.md
+├── 06-omnibenchmark             # Omnibenchmark and clustbench
+│   ├── exercises
+│   │   ├── exercises.md
 └── .github/workflows/           # CI/CD automation
     └── build-slides.yml         # Automatic slide compilation
 ```
