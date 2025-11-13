@@ -60,11 +60,30 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # Upload all PDFs to release
+      # generate artifacts
+      - name: Upload basics PDF
+        uses: actions/upload-artifact@v4
+        with:
+          name: basics
+          path: 01-basics/slides/basics.pdf
+
+      - name: Upload omnibenchmark PDF
+        uses: actions/upload-artifact@v4
+        with:
+          name: omnibenchmark
+          path: 06-omnibenchmark/slides/omnibenchmark.pdf
+
+      # download artifacts
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release-assets
+    
+      # release artifacts
       - name: Upload PDFs to release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: latest
-          files: 01-basics/slides/basics.pdf 06-omnibenchmark/slides/omnibenchmark.pdf
+          files: release-assets/basics/basics.pdf release-assets/omnibenchmark/omnibenchmark.pdf
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
