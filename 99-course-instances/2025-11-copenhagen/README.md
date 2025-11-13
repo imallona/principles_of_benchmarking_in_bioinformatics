@@ -12,19 +12,95 @@ TBD
 
 ### Software installations
 
-Install apptainer, conda, and omnibenchmark using conda following [https://docs.omnibenchmark.org/latest/howto/](ob's instructions.
+[Install apptainer, conda, and omnibenchmark using conda](https://docs.omnibenchmark.org/latest/howto/).
+
+
+Mind the exact omnibenchmark version:  `pip install omnibenchmark==0.3.1`.
+
+Test these:
+
+```bash
+
+conda --version
+apptainer --version
+ob --version
+```
 
 ### The clustering example (clustbench)
 
+Get the clustbench manifest by cloning the clustbench repository at https://github.com/omnibenchmark/clustering_example .
+
+```bash
+cd
+mkdir benchmarks
+cd $_
+git clone git@github.com:omnibenchmark/clustering_example.git
+cd clustering_example
+```
+
 Plot clustbench's topology.
 
-Dry-run the clustbench using conda.
+```bash
+ob info topology -b Clustering_conda.yml
+```
 
-Dry-run the clustbench using apptainer.
+And the computational topology.
+
+```bash
+ob info computational -b Clustering_conda.yml | dot -Tpng -Gdpi=300 -o plot.png
+## visualize plot.png
+```
+
+How are software stacks defined?
+
+```bash
+## conda envs are recipes using conda-forge and bioconda
+grep conda Clustering_conda.yml
+ls -l envs
+head -100 envs/*yml
+
+## apptainer images are downloaded from a registry, but recipes are available
+grep apptainer Clustering_oras.yml
+head envs/build_singularity.sh
+head envs/*def
+```
+
+Dry-run the `Clustering_conda.yml`. 
+
+```bash
+## local-storage means results will be stored locally
+ob run benchmark -b Clustering_conda.yml --dry-run --local-storage
+```
+
+Dry-run the `Clustering_oras.yml`.
+
+```bash
+ob run benchmark -b Clustering_oras.yml --dry-run --local-storage
+```
 
 Run the clustbench using conda or apptainer.
 
+```bash
+ob run benchmark -b Clustering_conda.yml --dry-run --local-storage
+```
+
 What are methods producing? Is it a vector of partitions? Is it a 2D matrix? 
+
+```bash
+
+```
+
+Run a single module using `ob run module`.
+
+```bash
+
+```
+
+Run a single module without omnibenchmark's CLI, just using the right interpreter, script name, and arguments. Plan to activate the software backend.
+
+```bash
+
+```
 
 ### Add a new module to the clustering example
 
