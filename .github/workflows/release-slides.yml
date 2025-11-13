@@ -1,0 +1,94 @@
+name: Build LaTeX slides
+
+on:
+  pull_request:
+    paths:
+      - '*/slides/*.tex'
+      - '.github/workflows/*.yml'
+  workflow_dispatch:
+
+jobs:
+  build-pdf:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Required to delete/create releases and upload assets
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Compile 01-basics slides
+      - name: Compile 01-basics slides
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: basics.tex
+          working_directory: 01-basics/slides
+          args: -pdf -interaction=nonstopmode -file-line-error
+
+      - name: Check if 01-basics PDF was created
+        run: |
+          test -f 01-basics/slides/basics.pdf
+
+      # Compile 06-omnibenchmark slides
+      - name: Compile 06-omnibenchmark slides
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: omnibenchmark.tex
+          working_directory: 06-omnibenchmark/slides
+          args: -pdf -interaction=nonstopmode -file-line-error
+
+      - name: Check if 06-omnibenchmark PDF was created
+        run: |
+          test -f 06-omnibenchmark/slides/omnibenchmark.pdf
+
+      # Delete existing 'latest' release and tag as latest
+      - name: Delete existing 'slides' release and tag
+        uses: dev-drprasad/delete-tag-and-release@v1.1
+        with:
+          tag_name: slides
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: release
+        uses: actions/create-release@v1
+        id: create_release
+        with:
+          draft: false
+          prerelease: false
+          release_name: slides
+          tag_name: slides
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        
+      # generate artifacts
+      - name: Upload basics PDF
+        uses: actions/upload-artifact@v4
+        with:
+          name: basics
+          path: 01-basics/slides/basics.pdf
+
+      - name: Upload omnibenchmark PDF
+        uses: actions/upload-artifact@v4
+        with:
+          name: omnibenchmark
+          path: 06-omnibenchmark/slides/omnibenchmark.pdf
+
+      - name: upload basics slides
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: 01-basics/slides/basics.pdf
+          asset_name: basics.pdf
+          asset_content_type: application/pdf
+
+      - name: upload omnibenchmark slides
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: 06-omnibenchmark/slides/omnibenchmark.pdf
+          asset_name: omnibenchmark.pdf
+          asset_content_type: application/pdf
