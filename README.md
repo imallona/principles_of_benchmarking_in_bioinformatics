@@ -6,7 +6,7 @@ Bias disclaimer: authors are developers of Omnibenchmark (since inception, 2019)
 
 ## TL/DR
 
-For Denmark 17-18 Nov 2025: [exercises](`99-course-instances/2025-11-copenhagen`).
+For Denmark 17-18 Nov 2025: [exercises](99-course-instances/2025-11-copenhagen/README.md).
 
 ## Repository structure
 
@@ -63,6 +63,26 @@ cd 01-basics/slides
 pdflatex basics.tex
 pdflatex basics.tex  # Run twice for proper references
 ```
+
+### 06-omnibenchmark
+
+Solo benchmarking with omnibenchmark.
+
+See [06-omnibenchmark/README.md](06-omnibenchmark/README.md) for details.
+
+Compiled PDF slides are automatically built via GitHub Actions and available as artifacts:
+1. Go to the [Actions tab](../../actions)
+2. Click on the latest "Build LaTeX Slides" workflow run
+3. Download the `omnibenchmark-slides-pdf` artifact
+
+Slides can be built using LaTeX (pdflatex):
+
+```bash
+cd 06-omnibenchmark/slides
+pdflatex omnibenchmark.tex
+pdflatex omnibenchmark.tex  # Run twice for proper references
+```
+
 
 ## CI/CD
 

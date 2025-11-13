@@ -41,6 +41,41 @@ Fork `clustering_example` and update the YAML to incorporate the new method.
 
 Run the updated benchmark.
 
+#### Common pitfalls
+
+1. Starting too big:
+   - Mistake: Running full benchmark immediately
+   - Solution: Start with dry-run, then small subset
+
+2. Ignoring resource requirements:
+   - Mistake: Running on laptop with insufficient RAM
+   - Solution: Check requirements, use HPC if needed
+
+3. Not checking architecture:
+   - Mistake: Trying to run on arm64 when conda does not offer packages for that architecture
+   - Solution: Verify the software environments match your system's architecture
+
+4. Hardcoded paths in modules:
+   - Mistake: `/home/user/data/file.csv` in code
+   - Solution: Use command-line arguments and relative paths
+
+5. Missing dependency versions:
+   - Mistake: `numpy` instead of `numpy==1.23.5`
+   - Solution: Pin all versions
+
+6. Not testing locally:
+   - Mistake: `ob run benchmark`  untested module
+   - Solution: Test locally with toy data first
+
+7. Ignoring random seeds:
+   - Mistake: Stochastic methods without seed control
+   - Solution: Accept and use random seed parameter
+
+8. Poor error handling:
+   - Mistake: Silent failures
+   - Solution: Catch exceptions, log errors, return error codes
+
+
 #### Debugging
 
 ### Plan your own omnibenchmark
