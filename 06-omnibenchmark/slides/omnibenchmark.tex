@@ -7,6 +7,7 @@
 \usepackage{listings}
 \usepackage{xcolor}
 \usepackage{hyperref}
+\usepackage{url}
 
 % Configure code listings
 \lstset{
@@ -70,12 +71,11 @@
     \end{itemize}
     
     \vspace{0.3cm}
-    Website: \texttt{https://omnibenchmark.org}
+    Website: \url{https://omnibenchmark.org}
     
-    Docs: \texttt{https://docs.omnibenchmark.org}
 \end{frame}
 
-\begin{frame}{Design Philosophy}
+\begin{frame}{Design philosophy}
     \textbf{Traditional benchmarks:}
     \begin{itemize}
         \item One-time publication
@@ -98,7 +98,7 @@
     \textit{Think of it as a "continuous integration for benchmarking"}
 \end{frame}
 
-\begin{frame}{Omnibenchmarks architecture}
+\begin{frame}{Benchmarks architecture}
   
    \textbf{Flexible topology, but often:}
     \begin{enumerate}
@@ -127,7 +127,7 @@
 \end{frame}
 
 \begin{frame}{The clustering example}
-    \textbf{Repository:} \texttt{github.com/omnibenchmark/clustering\_example}
+    \textbf{Repository:} \url{https://github.com/omnibenchmark/clustering\_example}
     
     \vspace{0.3cm}
     A complete benchmark for clustering methods using the clustbench dataset collection.
@@ -167,7 +167,7 @@
     \end{itemize}
     
     \vspace{0.3cm}
-    Data repository: \texttt{github.com/imallona/clustbench\_data}
+    Data repository: \url{https://github.com/imallona/clustbench\_data}
 \end{frame}
 
 \begin{frame}[fragile]{Installation}
@@ -183,7 +183,7 @@ ob --version
 \vspace{0.3cm}
 \textbf{Full installation guide:}
 
-\texttt{https://docs.omnibenchmark.org/latest/howto/\#install-omnibenchmark}
+\url{https://docs.omnibenchmark.org/latest/howto/\#install-omnibenchmark}
 \end{frame}
 
 \begin{frame}[fragile]{Cloning the Benchmark}
@@ -208,21 +208,17 @@ ls -la
 
 \begin{frame}[fragile]{Running the Benchmark}
 \begin{lstlisting}[language=bash]
-# Basic run (6 cores, local storage)
-ob run benchmark -b Clustering.yaml --local-storage --cores 6
+# Basic run (2 cores, local storage)
+ob run benchmark -b Clustering.yaml --local-storage --cores 2
 
 # Options:
 # -b, --benchmark: Path to configuration YAML
-# --local-storage: Store results locally (not on Renku)
+# --local-storage: Store results locally (not S3)
 # --cores: Number of parallel processes
 # --dry-run: Show what would be executed without running
 
-# For larger runs (recommended 30+ cores)
-ob run benchmark -b Clustering.yaml --local-storage --cores 30
-
-# Expected runtime:
-# - 6 cores: ~8 hours for 97% completion
-# - 30 cores: ~4 hours for 50% completion
+# Faster (more concurrent tasks)
+ob run benchmark -b Clustering.yaml --local-storage --cores 10
 \end{lstlisting}
 
 \vspace{0.3cm}
@@ -262,7 +258,6 @@ ob run benchmark -b Clustering.yaml --local-storage --cores 30
 # Clustering.yaml (simplified)
 benchmark:
   name: "clustering_benchmark"
-  output_dir: "results"
 
 data:
   - repo: "github.com/imallona/clustbench_data"
@@ -286,7 +281,7 @@ metrics:
 \end{frame}
 
 \begin{frame}{Data modules}
-    \textbf{Data repository:} \texttt{github.com/imallona/clustbench\_data}
+    \textbf{Data repository:} \url{https://github.com/imallona/clustbench_data}
     
     \vspace{0.3cm}
     \textbf{Dataset generators:}
@@ -315,27 +310,27 @@ metrics:
     
     \vspace{0.3cm}
     \begin{enumerate}
-        \item \textbf{fastcluster} (\texttt{github.com/imallona/clustbench\_fastcluster})
+        \item \textbf{fastcluster} (\url{https://github.com/imallona/clustbench_fastcluster})
             \begin{itemize}
                 \item Linkages: complete, ward, average, weighted, median, centroid
             \end{itemize}
         
-        \item \textbf{sklearn} (\texttt{github.com/imallona/clustbench\_sklearn})
+        \item \textbf{sklearn} (\url{https://github.com/imallona/clustbench_sklearn})
             \begin{itemize}
                 \item Methods: birch, kmeans, spectral, Gaussian mixture
             \end{itemize}
         
-        \item \textbf{genieclust} (\texttt{github.com/imallona/clustbench\_genieclust})
+        \item \textbf{genieclust} (\url{https://github.com/imallona/clustbench_genieclust})
             \begin{itemize}
                 \item Methods: genie, GIC, ICA with various thresholds
             \end{itemize}
         
-        \item \textbf{FCPS} (\texttt{github.com/imallona/clustbench\_fcps})
+        \item \textbf{FCPS} (\url{https://github.com/imallona/clustbench_fcps})
             \begin{itemize}
                 \item Methods: Minimax, MinEnergy, HDBSCAN, Diana, Fanny, etc.
             \end{itemize}
         
-        \item \textbf{agglomerative} (\texttt{github.com/imallona/clustbench\_agglomerative})
+        \item \textbf{agglomerative} (\url{https://github.com/imallona/clustbench_agglomerative})
             \begin{itemize}
                 \item Linkages: average, complete, ward
             \end{itemize}
@@ -396,15 +391,10 @@ metrics:
 \begin{frame}[fragile]{Monitoring Execution}
 \begin{lstlisting}[language=bash]
 # During execution, monitor progress:
-
-# Check Snakemake output
-# Shows completed/remaining jobs
-
-# View log files
-ls -lh logs/
+# Check terminal / Snakemake's output
 
 # Check intermediate results
-ls -lh results/
+ls -lh out
 
 # Monitor resource usage
 top
@@ -420,14 +410,13 @@ top
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}{Interpreting Results}
+\begin{frame}{Interpreting results}
     \textbf{Key questions to ask:}
     \begin{itemize}
-        \item Which methods perform best on average?
+        \item Which methods perform best for most datasets?
         \item Are there dataset-specific strengths/weaknesses?
         \item How much do results vary across datasets?
         \item What's the runtime vs. accuracy tradeoff?
-        \item Are results statistically significant?
     \end{itemize}
     
     \vspace{0.3cm}
@@ -439,17 +428,10 @@ top
         \item Failed runs (check logs)
     \end{itemize}
     
-    \vspace{0.3cm}
-    \textbf{Remember:}
-    \begin{itemize}
-        \item No single "best" method for all cases
-        \item Consider multiple metrics
-        \item Context matters (real vs. synthetic data)
-    \end{itemize}
 \end{frame}
 
-\begin{frame}{Contributing New Modules}
-    \textbf{Want to add your method or dataset?}
+\begin{frame}{Contributing new modules}
+    \textbf{Want to add your method, metric or dataset?}
     
     \vspace{0.3cm}
     \textbf{Steps:}
@@ -468,33 +450,24 @@ top
     \vspace{0.3cm}
     \textbf{Documentation:} \texttt{https://docs.omnibenchmark.org/latest/howto/}
     
-    \vspace{0.3cm}
-    \textit{Community contributions are encouraged!}
 \end{frame}
 
-\begin{frame}[fragile]{Creating a Method Module}
+\begin{frame}[fragile]{Creating a method module}
 \begin{lstlisting}[language=python]
-# Minimal method module structure
-# my_clustering_method/src/run.py
-
 import argparse
 import pandas as pd
-from my_method import cluster
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--input', required=True)
-    parser.add_argument('--output', required=True)
-    parser.add_argument('--n_clusters', type=int, required=True)
-    args = parser.parse_args()
-    
-    # Load data
+    parser.add_argument('--data.matrix', required=True)
+    parser.add_argument('--data.true_labels', required=True)
+    ## etc
+    args = parser.parse_args()    
+
     data = pd.read_csv(args.input)
+
+    labels = cluster(data, n_clusters=args.n_clusters) ## across ks
     
-    # Run clustering
-    labels = cluster(data, n_clusters=args.n_clusters)
-    
-    # Save predictions
     pd.DataFrame(labels).to_csv(args.output, index=False)
 
 if __name__ == '__main__':
@@ -502,15 +475,14 @@ if __name__ == '__main__':
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}{Best Practices for Modules}
+\begin{frame}{Best practices}
     \textbf{Do:}
     \begin{itemize}
         \item Follow standardized interfaces strictly
         \item Pin all dependency versions
-        \item Include comprehensive tests
+        \item Include tests
         \item Document parameters and outputs
         \item Handle errors gracefully
-        \item Log execution metadata (time, memory)
         \item Use appropriate random seeds
     \end{itemize}
     
@@ -519,14 +491,10 @@ if __name__ == '__main__':
     \begin{itemize}
         \item Hardcode paths or parameters
         \item Assume specific working directory
-        \item Modify input data files
-        \item Ignore errors silently
-        \item Use undocumented dependencies
-        \item Skip validation of inputs
     \end{itemize}
 \end{frame}
 
-\begin{frame}{Troubleshooting Common Issues}
+\begin{frame}{Troubleshooting}
     \textbf{Problem: "Cannot create conda environment"}
     
     Solution: Check internet connection, verify conda installation
@@ -552,60 +520,6 @@ if __name__ == '__main__':
     Solution: Check random seeds, verify dependency versions
 \end{frame}
 
-\begin{frame}{Advantages of Omnibenchmark}
-    \textbf{For benchmark creators:}
-    \begin{itemize}
-        \item Automated orchestration
-        \item Built-in provenance tracking
-        \item Community contributions
-        \item Continuous updates
-    \end{itemize}
-    
-    \vspace{0.3cm}
-    \textbf{For method developers:}
-    \begin{itemize}
-        \item Fair comparison to existing methods
-        \item No need to reimplement baselines
-        \item Standardized evaluation protocol
-        \item Continuous testing on new data
-    \end{itemize}
-    
-    \vspace{0.3cm}
-    \textbf{For users:}
-    \begin{itemize}
-        \item Up-to-date comparisons
-        \item Reproducible results
-        \item Easy to explore tradeoffs
-        \item Transparent methodology
-    \end{itemize}
-\end{frame}
-
-\begin{frame}{Limitations and Considerations}
-    \textbf{Be aware of:}
-    \begin{itemize}
-        \item \textbf{Computational cost}: Full benchmarks can take hours/days
-        \item \textbf{Architecture requirements}: amd64 only (no arm64)
-        \item \textbf{Storage needs}: Results can be large
-        \item \textbf{Complexity}: Steep learning curve for first-time users
-        \item \textbf{Maintenance}: Modules need updates as software evolves
-    \end{itemize}
-    
-    \vspace{0.3cm}
-    \textbf{Not suitable for:}
-    \begin{itemize}
-        \item Quick one-off comparisons (use simpler tools)
-        \item Methods requiring interactive tuning
-        \item Proprietary methods that can't be shared
-    \end{itemize}
-    
-    \vspace{0.3cm}
-    \textbf{Best for:}
-    \begin{itemize}
-        \item Large-scale, ongoing benchmarks
-        \item Community-driven comparisons
-        \item Reproducible research
-    \end{itemize}
-\end{frame}
 
 \begin{frame}{Summary}
     \textbf{Key takeaways:}
@@ -615,7 +529,6 @@ if __name__ == '__main__':
         \item Clustering example: Complete benchmark with 79+ datasets, 20+ methods
         \item Running: \texttt{ob run benchmark -b Clustering.yaml --local-storage --cores 6}
         \item Contributing: Create standardized module in new repository
-        \item Best for large-scale, ongoing benchmarks
     \end{itemize}
     
     \vspace{0.3cm}
@@ -624,7 +537,7 @@ if __name__ == '__main__':
         \item Install omnibenchmark: \texttt{pip install omnibenchmark}
         \item Clone example: \texttt{git clone github.com/omnibenchmark/clustering\_example}
         \item Try dry-run: \texttt{ob run benchmark -b Clustering.yaml --dry-run}
-        \item Run small test (if resources allow)
+        \item Run
     \end{enumerate}
 \end{frame}
 
@@ -640,7 +553,6 @@ if __name__ == '__main__':
     \textbf{Related papers:}
     \begin{itemize}
         \item Gagolewski (2022) "Are cluster validity measures (in)valid?"
-        \item See Omnibenchmark documentation for platform papers
     \end{itemize}
 \end{frame}
 

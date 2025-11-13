@@ -1,4 +1,4 @@
-name: Build beamer slides
+name: build slides
 
 on:
   pull_request:
@@ -17,7 +17,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       
-      - name: Compile LaTeX document
+      - name: Compile 01-basics slides
         uses: xu-cheng/latex-action@v3
         with:
           root_file: basics.tex
@@ -26,18 +26,44 @@ jobs:
           latexmk_shell_escape: false
           args: -pdf -interaction=nonstopmode -file-line-error
         
-      - name: Upload PDF artifact
+      - name: Upload 01-basics PDF artifact
         uses: actions/upload-artifact@v4
         with:
           name: 01-basics-slides-pdf
           path: 01-basics/slides/basics.pdf
           retention-days: 90
       
-      - name: Check if PDF was created
+      - name: Check if 01-basics PDF was created
         run: |
           if [ -f 01-basics/slides/basics.pdf ]; then
             echo "PDF successfully created"
             ls -lh 01-basics/slides/basics.pdf
+          else
+            echo "PDF creation failed"
+            exit 1
+          fi
+            
+      - name: Compile 06-omnibenchmark slides
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: omnibenchmark.tex
+          working_directory: 06-omnibenchmark/slides
+          latexmk_use_lualatex: false
+          latexmk_shell_escape: false
+          args: -pdf -interaction=nonstopmode -file-line-error
+        
+      - name: Upload 06-omnibenchmark PDF artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: 06-omnibenchmark-slides-pdf
+          path: 06-omnibenchmark/slides/omnibenchmark.pdf
+          retention-days: 90
+      
+      - name: Check if 06-omnibenchmark PDF was created
+        run: |
+          if [ -f 06-omnibenchmark/slides/omnibenchmark.pdf ]; then
+            echo "PDF successfully created"
+            ls -lh 06-omnibenchmark/slides/omnibenchmark.pdf
           else
             echo "PDF creation failed"
             exit 1
