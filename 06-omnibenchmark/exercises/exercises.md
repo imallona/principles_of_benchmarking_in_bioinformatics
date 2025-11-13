@@ -397,7 +397,7 @@ Common mistakes and solutions:
    - Solution: Pin all versions
 
 6. Not testing locally:
-   - Mistake: Submitting untested module
+   - Mistake: `ob run benchmark` untested module
    - Solution: Test locally with toy data first
 
 7. Ignoring random seeds:
