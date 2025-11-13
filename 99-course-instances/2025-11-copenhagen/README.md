@@ -1,16 +1,16 @@
-## Location and plan
+# Location and plan
 
 Blegdamsvej 3B, Copenhagen
 
 Lectures: 17-18 November 2025, 10.00 – 16.00
 
-## Exercises
+# Exercises
 
-### Login
+## Login details
 
 TBD
 
-### Software installations
+## Software installations
 
 [Install apptainer, conda, and omnibenchmark using conda](https://docs.omnibenchmark.org/latest/howto/).
 
@@ -26,7 +26,9 @@ apptainer --version
 ob --version
 ```
 
-### The clustering example (clustbench)
+## The clustering example (clustbench)
+
+### Clone
 
 Get the clustbench manifest by cloning the clustbench repository at https://github.com/omnibenchmark/clustering_example .
 
@@ -38,20 +40,25 @@ git clone git@github.com:omnibenchmark/clustering_example.git
 cd clustering_example
 ```
 
+### Plot topology
+
 Plot clustbench's topology.
 
 ```bash
 ob info topology -b Clustering_conda.yml
 ```
 
-And the computational topology.
 
-```bash
-ob info computational -b Clustering_conda.yml | dot -Tpng -Gdpi=300 -o plot.png
-## visualize plot.png
-```
+<!-- ### Plot computational topology  -->
+<!-- And the computational topology. -->
 
-How are software stacks defined?
+<!-- ```bash -->
+<!-- ob info computational -b Clustering_conda.yml | dot -Tpng -Gdpi=300 -o plot.png -->
+<!-- ## visualize plot.png -->
+<!-- ``` -->
+
+
+### Inspect software environment specifications
 
 ```bash
 ## conda envs are recipes using conda-forge and bioconda
@@ -65,7 +72,9 @@ head envs/build_singularity.sh
 head envs/*def
 ```
 
-Dry-run the `Clustering_conda.yml`. 
+### Dry run benchmark
+
+Dry-run the full `Clustering_conda.yml` benchmark. 
 
 ```bash
 ## local-storage means results will be stored locally
@@ -77,6 +86,8 @@ Dry-run the `Clustering_oras.yml`.
 ```bash
 ob run benchmark -b Clustering_oras.yml --dry-run --local-storage
 ```
+
+### Run benchmark
 
 Run the clustbench using conda or apptainer.
 
@@ -105,11 +116,15 @@ find out/data/clustbench/dataset_generator-fcps_dataset_name-atom/clustering/*/*
 ## so a 2D matrix. `k` means the true number of clusters
 ```
 
+### Run module with `ob run module`
+
 Run a single module using `ob run module`.
 
 ```bash
 ob run module -b Clustering_conda.yml  -m fastcluster --input_dir out/data/clustbench/dataset_generator-fcps_dataset_name-atom/
 ```
+
+### Run module manually (ideal for development)
 
 Run a single module without omnibenchmark's CLI, just using the right interpreter, script name, and arguments. Plan to activate the software backend.
 
@@ -157,6 +172,18 @@ conda deactivate
 
 ## make sure the omnibenchmark environment is still there (top left)
 echo $PATH
+```
+
+### Un-comment some modules from the clustering example
+
+And re-evaluate the benchmark scope
+
+```bash
+## uncomment (i.e., effectively add) some modules to the `Clustering_conda.yml`
+## then, dry run
+
+ob run benchmark -b Clustering_conda.yml --local-storage --dry-run
+
 ```
 
 ### Add a new module to the clustering example
