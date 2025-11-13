@@ -119,11 +119,13 @@ conda env create -f envs/clustbench.yml
 
 ## activate the environment (it's nested under omnibenchmark's)
 conda activate clustbench
+
+## make sure the environment has been activated (appended to the left of the PATH)
 echo $PATH
 
 ## get (git clone in this case) the repository to try
 ##  you might want to change the working directory
-old_path=$(pwd)
+old_wd=$(pwd)
 cd
 git clone git@github.com:imallona/clustbench_fastcluster.git
 cd clustbench_fastcluster
@@ -145,10 +147,15 @@ python run_fastcluster.py --data.matrix ~/benchmarks/clustering_example/out/data
 zcat manual_run_output/*gz
 
 ## go back to the old working directory
-cd $old_path
+cd $old_wd
 
-## deactivate the current environment (careful, if repeated this could deactivate the omnibenchmark env)
+## make sure clustbench is still topleft
+echo $PATH
+
+## deactivate the current environment (middfully, if repeated this could deactivate the omnibenchmark env)
 conda deactivate
+
+## make sure the omnibenchmark environment is still there (top left)
 echo $PATH
 ```
 
@@ -157,15 +164,21 @@ echo $PATH
 We aim to modify the `Clustering_conda.yml` manifest to add a method that assigns random clusters to the observations. This aims to be a baseline method. Pin the random seed and/or pass it as an argument to the method.
 
 1. Start a new git repository
-2. 
+2. Implement (in your favourite language) a method that parses, from the commandline, the required arguments for a stage 'clustering' module. That is:
 
-Write a proper environment file.
+```
+--data.matrix       ## the actual data to cluster (this is specific to this `stage` contract)
+--data.true_labels  ## the true partitioning  (this is specific to this `stage` contract)
+--output_dir        ## the output dir (all modules need this argument)
+--name              ## the name of the module (all modules need this argument)
+```
 
-Test the method locally.
+Please consider also adding a `--seed` argument to set the random seed.
 
-Fork `clustering_example` and update the YAML to incorporate the new method.
-
-Run the updated benchmark.
+3. Write a conda YAML (or singularity container recipe, and build it) with the required dependencies.
+4. Test the method locally.
+5. Fork `clustering_example` and update the YAML to incorporate the new method.
+6. Dry run the updated benchmark.
 
 #### Common pitfalls
 
