@@ -1,0 +1,647 @@
+\documentclass[aspectratio=169]{beamer}
+
+\usetheme{Warsaw}
+\usecolortheme{default}
+
+\usepackage[utf8]{inputenc}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{hyperref}
+
+% Configure code listings
+\lstset{
+    basicstyle=\ttfamily\footnotesize,
+    breaklines=true,
+    frame=single,
+    showstringspaces=false,
+    backgroundcolor=\color{gray!10},
+    keywordstyle=\color{blue},
+    commentstyle=\color{green!50!black},
+    stringstyle=\color{red}
+}
+
+
+\definecolor{yamlkey}{rgb}{0.56,0.35,0.01}
+\definecolor{yamlvalue}{rgb}{0.0,0.47,0.62}
+\definecolor{yamlcomment}{rgb}{0.5,0.5,0.5}
+
+\lstdefinelanguage{yaml}{
+  keywords={true,false,null,y,n},
+  keywordstyle=\color{blue},
+  basicstyle=\ttfamily\small,
+  sensitive=true,
+  comment=[l]{\#},
+  morecomment=[l]{\#},
+  commentstyle=\color{yamlcomment}\ttfamily,
+  morestring=[b]",
+  stringstyle=\color{yamlvalue},
+  moredelim=[s][\color{yamlkey}]{:}{\ },
+}
+
+
+\title{Omnibenchmark for solo benchmarking}
+\author{Izaskun Mallona}
+\date{\today}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}{Overview}
+    \begin{itemize}
+        \item What is Omnibenchmark?
+        \item Architecture and design philosophy
+        \item The clustering example
+        \item How to run a benchmark
+        \item Contributing modules
+        \item Best practices
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{What is Omnibenchmark?}
+    \textbf{Omnibenchmark} is a CLI to facilitate solo and collaborative benchmarking
+    \textbf{Key features:}
+    \begin{itemize}
+        \item \textbf{Modular}: Distributed modules in separate repositories
+        \item \textbf{Collaborative}: Community can contribute new modules
+        \item \textbf{Transparent}: Topology, modules, metrics, and contribution are formally defined and reusable
+        \item \textbf{Automated}: Workflow-manager friendly
+        \item \textbf{Repeatable}: Includes several software backends (Conda, Apptainer, modules)
+    \end{itemize}
+    
+    \vspace{0.3cm}
+    Website: \texttt{https://omnibenchmark.org}
+    
+    Docs: \texttt{https://docs.omnibenchmark.org}
+\end{frame}
+
+\begin{frame}{Design Philosophy}
+    \textbf{Traditional benchmarks:}
+    \begin{itemize}
+        \item One-time publication
+        \item Centralized, monolithic code
+        \item Difficult to extend
+        \item Results become outdated
+    \end{itemize}
+    
+    \vspace{0.3cm}
+    \textbf{Omnibenchmark approach:}
+    \begin{itemize}
+        \item Living benchmark: Continuously updated
+        \item Distributed modules: Each in its own repository
+        \item Easy extension: Add new modules without changing core
+        \item Current results: Automatically rerun when updated
+        \item Fair comparison: All methods use same infrastructure
+    \end{itemize}
+    
+    \vspace{0.3cm}
+    \textit{Think of it as a "continuous integration for benchmarking"}
+\end{frame}
+
+\begin{frame}{Omnibenchmarks architecture}
+  
+   \textbf{Flexible topology, but often:}
+    \begin{enumerate}
+        \item \textbf{Data modules}: Generate or load datasets
+            \begin{itemize}
+                \item Each dataset is a separate repository
+                \item Output: data files + metadata
+            \end{itemize}
+        
+        \item \textbf{Method modules}: Apply computational methods
+            \begin{itemize}
+                \item Each method is a separate repository
+                \item Input: data from data modules
+                \item Output: predictions/results
+            \end{itemize}
+        
+        \item \textbf{Metric modules}: Compute performance measures
+            \begin{itemize}
+                \item Compare method outputs to ground truth
+                \item Generate summary statistics and visualizations
+            \end{itemize}
+    \end{enumerate}
+    
+    \vspace{0.3cm}
+    \textbf{Central orchestration}: YAML benchmark manifest defines connections and requirements
+\end{frame}
+
+\begin{frame}{The clustering example}
+    \textbf{Repository:} \texttt{github.com/omnibenchmark/clustering\_example}
+    
+    \vspace{0.3cm}
+    A complete benchmark for clustering methods using the clustbench dataset collection.
+    
+    \vspace{0.3cm}
+    \textbf{Components:}
+    \begin{itemize}
+        \item \textbf{79+ datasets} from clustbench (mnist, iris, synthetic shapes, etc.)
+        \item \textbf{20+ clustering methods} across 5 families:
+            \begin{itemize}
+                \item Hierarchical (fastcluster, sklearn, genieclust)
+                \item Partitioning (k-means, PAM)
+                \item Density-based (HDBSCAN)
+                \item Model-based (Gaussian mixture)
+                \item Specialized (FCPS methods)
+            \end{itemize}
+        \item \textbf{Multiple metrics}: ARI, MI, FM score, accuracy variants
+        \item \textbf{Summary reports}: Comprehensive comparison
+    \end{itemize}
+    
+\end{frame}
+
+\begin{frame}{Clustbench attribution}
+    \textbf{Original benchmark by:} Marek Gagolewski
+    
+    \textbf{Reference:}
+    
+    Gagolewski M., A framework for benchmarking clustering algorithms, SoftwareX 20, 2022, 101270
+    
+    \vspace{0.3cm}
+    \textbf{Original clustbench:}
+    \begin{itemize}
+        \item 79 datasets with ground truth labels
+        \item Wide variety of cluster shapes and difficulties
+        \item Real and synthetic data
+        \item Some datasets excluded for computational reasons
+    \end{itemize}
+    
+    \vspace{0.3cm}
+    Data repository: \texttt{github.com/imallona/clustbench\_data}
+\end{frame}
+
+\begin{frame}[fragile]{Installation}
+\begin{lstlisting}[language=bash]
+# 1. Install omnibenchmark
+pip install omnibenchmark
+
+
+# 2. Verify installation
+ob --version
+\end{lstlisting}
+
+\vspace{0.3cm}
+\textbf{Full installation guide:}
+
+\texttt{https://docs.omnibenchmark.org/latest/howto/\#install-omnibenchmark}
+\end{frame}
+
+\begin{frame}[fragile]{Cloning the Benchmark}
+\begin{lstlisting}[language=bash]
+# Clone the clustering example
+git clone git@github.com:omnibenchmark/clustering_example.git
+
+# Or using HTTPS
+git clone https://github.com/omnibenchmark/clustering_example.git
+
+# Move to the repository
+cd clustering_example
+
+# Explore the structure
+ls -la
+# Key files:
+# - Clustering.yaml: Benchmarking manifests
+# - envs/: Environment specifications
+# - README.md: Documentation
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Running the Benchmark}
+\begin{lstlisting}[language=bash]
+# Basic run (6 cores, local storage)
+ob run benchmark -b Clustering.yaml --local-storage --cores 6
+
+# Options:
+# -b, --benchmark: Path to configuration YAML
+# --local-storage: Store results locally (not on Renku)
+# --cores: Number of parallel processes
+# --dry-run: Show what would be executed without running
+
+# For larger runs (recommended 30+ cores)
+ob run benchmark -b Clustering.yaml --local-storage --cores 30
+
+# Expected runtime:
+# - 6 cores: ~8 hours for 97% completion
+# - 30 cores: ~4 hours for 50% completion
+\end{lstlisting}
+
+\vspace{0.3cm}
+\textit{Warning: Computationally intensive! Start with dry-run.}
+\end{frame}
+
+\begin{frame}{Software environments / backends}
+    \textbf{Multiple environment backends supported:}
+    
+    \vspace{0.3cm}
+    \begin{itemize}
+        \item \textbf{Conda} (default): Python package management
+            \begin{itemize}
+                \item Config: \texttt{Clustering.yaml}
+                \item Best for: Local development, standard packages
+            \end{itemize}
+        
+        \item \textbf{Apptainer/Singularity}: Containers
+            \begin{itemize}
+                \item Config: \texttt{Clustering\_apptainer.yaml}
+                \item Best for: HPC, complex dependencies
+            \end{itemize}
+        
+        \item \textbf{Easybuild/Lmod}: Environment modules
+            \begin{itemize}
+                \item Config: \texttt{Clustering\_easybuild.yaml}
+                \item Best for: HPC with existing modules
+            \end{itemize}
+    \end{itemize}
+    
+    \vspace{0.3cm}
+    \textbf{See:} \texttt{envs/README.md} for backend details
+\end{frame}
+
+\begin{frame}[fragile]{Understanding the Configuration}
+\begin{lstlisting}[language=yaml]
+# Clustering.yaml (simplified)
+benchmark:
+  name: "clustering_benchmark"
+  output_dir: "results"
+
+data:
+  - repo: "github.com/imallona/clustbench_data"
+    datasets:
+      - args: ["--dataset_generator", "mnist", 
+               "--dataset_name", "fashion"]
+      - args: ["--dataset_generator", "other",
+               "--dataset_name", "iris"]
+
+methods:
+  - repo: "github.com/imallona/clustbench_fastcluster"
+    method:
+      - args: ["--linkage", "complete"]
+      - args: ["--linkage", "ward"]
+
+metrics:
+  - repo: "github.com/imallona/clustbench_metrics"
+    metrics:
+      - args: ["--metric", "adjusted_rand_score"]
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Data modules}
+    \textbf{Data repository:} \texttt{github.com/imallona/clustbench\_data}
+    
+    \vspace{0.3cm}
+    \textbf{Dataset generators:}
+    \begin{itemize}
+        \item \texttt{mnist}: Fashion MNIST, Digits MNIST
+        \item \texttt{other}: Iris, chameleon, etc.
+        \item \texttt{wut}: Warsaw University of Technology synthetic sets
+        \item \texttt{sipu}: Clusters with various shapes
+        \item \texttt{uci}: UCI Machine Learning Repository datasets
+    \end{itemize}
+    
+    \vspace{0.3cm}
+    \textbf{Each dataset provides:}
+    \begin{itemize}
+        \item Data matrix (samples × features)
+        \item Ground truth labels
+        \item Metadata (n\_clusters, difficulty, etc.)
+    \end{itemize}
+    
+    \vspace{0.3cm}
+    \textit{Note: Some large datasets commented out for speed}
+\end{frame}
+
+\begin{frame}{Method modules}
+    \textbf{Five method families:}
+    
+    \vspace{0.3cm}
+    \begin{enumerate}
+        \item \textbf{fastcluster} (\texttt{github.com/imallona/clustbench\_fastcluster})
+            \begin{itemize}
+                \item Linkages: complete, ward, average, weighted, median, centroid
+            \end{itemize}
+        
+        \item \textbf{sklearn} (\texttt{github.com/imallona/clustbench\_sklearn})
+            \begin{itemize}
+                \item Methods: birch, kmeans, spectral, Gaussian mixture
+            \end{itemize}
+        
+        \item \textbf{genieclust} (\texttt{github.com/imallona/clustbench\_genieclust})
+            \begin{itemize}
+                \item Methods: genie, GIC, ICA with various thresholds
+            \end{itemize}
+        
+        \item \textbf{FCPS} (\texttt{github.com/imallona/clustbench\_fcps})
+            \begin{itemize}
+                \item Methods: Minimax, MinEnergy, HDBSCAN, Diana, Fanny, etc.
+            \end{itemize}
+        
+        \item \textbf{agglomerative} (\texttt{github.com/imallona/clustbench\_agglomerative})
+            \begin{itemize}
+                \item Linkages: average, complete, ward
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{Metric modules}
+    \textbf{Metric repository:} \texttt{github.com/imallona/clustbench\_metrics}
+    
+    \vspace{0.3cm}
+    \textbf{External clustering metrics} (require ground truth):
+    \begin{itemize}
+        \item \texttt{adjusted\_rand\_score}: Adjusted Rand Index (ARI)
+        \item \texttt{adjusted\_mutual\_info\_score}: Adjusted MI
+        \item \texttt{normalized\_mutual\_info\_score}: Normalized MI
+        \item \texttt{fowlkes\_mallows\_score}: FM score
+        \item \texttt{normalized\_clustering\_accuracy}: Accuracy variants
+        \item \texttt{pair\_sets\_index}: Pair sets index
+    \end{itemize}
+    
+    \vspace{0.3cm}
+    \textbf{Each metric provides:}
+    \begin{itemize}
+        \item Score (0 to 1, higher is better for most)
+        \item Runtime and memory usage
+        \item Metadata
+    \end{itemize}
+    
+    \vspace{0.3cm}
+    \textbf{Summary repository:} \texttt{github.com/imallona/clustering\_report}
+\end{frame}
+
+\begin{frame}{Understanding k±2 Strategy}
+    \textbf{Challenge:} Different datasets have different true numbers of clusters.
+    
+    \vspace{0.3cm}
+    \textbf{Solution:} Test each dataset with k-2, k-1, k, k+1, k+2 clusters
+    
+    where k is the true number of clusters.
+    
+    \vspace{0.3cm}
+    \textbf{Special case:} When k=3 (minimum reasonable), use:
+    
+    k = 2, 2, 3, 5, 6 (fill with k=2 as needed)
+    
+    \vspace{0.3cm}
+    \textbf{Why?}
+    \begin{itemize}
+        \item Fair comparison: Same number of runs across datasets
+        \item Robustness: Tests sensitivity to k parameter
+        \item Realism: In practice, true k is often unknown
+    \end{itemize}
+    
+    \vspace{0.3cm}
+    \textit{Note: This means some values recomputed, but ensures comparable runtimes}
+\end{frame}
+
+\begin{frame}[fragile]{Monitoring Execution}
+\begin{lstlisting}[language=bash]
+# During execution, monitor progress:
+
+# Check Snakemake output
+# Shows completed/remaining jobs
+
+# View log files
+ls -lh logs/
+
+# Check intermediate results
+ls -lh results/
+
+# Monitor resource usage
+top
+
+# Estimate completion time
+# Based on jobs completed vs. total
+
+# If execution fails:
+# - Check error messages
+# - Review log files
+# - Verify environment setup
+# - Restart with same command (Snakemake resumes)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Interpreting Results}
+    \textbf{Key questions to ask:}
+    \begin{itemize}
+        \item Which methods perform best on average?
+        \item Are there dataset-specific strengths/weaknesses?
+        \item How much do results vary across datasets?
+        \item What's the runtime vs. accuracy tradeoff?
+        \item Are results statistically significant?
+    \end{itemize}
+    
+    \vspace{0.3cm}
+    \textbf{Look for:}
+    \begin{itemize}
+        \item Methods that consistently rank high
+        \item Large performance gaps (potential issues)
+        \item Runtime outliers
+        \item Failed runs (check logs)
+    \end{itemize}
+    
+    \vspace{0.3cm}
+    \textbf{Remember:}
+    \begin{itemize}
+        \item No single "best" method for all cases
+        \item Consider multiple metrics
+        \item Context matters (real vs. synthetic data)
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Contributing New Modules}
+    \textbf{Want to add your method or dataset?}
+    
+    \vspace{0.3cm}
+    \textbf{Steps:}
+    \begin{enumerate}
+        \item Create a new repository for your module
+        \item Follow the module contract in terms of inputs, outputs, and arguments
+        \item Implement standardized interface:
+            \begin{itemize}
+                \item Input: data files in expected format
+                \item Output: results in expected format
+            \end{itemize}
+        \item Test locally with toy data
+        \item Submit pull request to add module to benchmark YAML
+    \end{enumerate}
+    
+    \vspace{0.3cm}
+    \textbf{Documentation:} \texttt{https://docs.omnibenchmark.org/latest/howto/}
+    
+    \vspace{0.3cm}
+    \textit{Community contributions are encouraged!}
+\end{frame}
+
+\begin{frame}[fragile]{Creating a Method Module}
+\begin{lstlisting}[language=python]
+# Minimal method module structure
+# my_clustering_method/src/run.py
+
+import argparse
+import pandas as pd
+from my_method import cluster
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--input', required=True)
+    parser.add_argument('--output', required=True)
+    parser.add_argument('--n_clusters', type=int, required=True)
+    args = parser.parse_args()
+    
+    # Load data
+    data = pd.read_csv(args.input)
+    
+    # Run clustering
+    labels = cluster(data, n_clusters=args.n_clusters)
+    
+    # Save predictions
+    pd.DataFrame(labels).to_csv(args.output, index=False)
+
+if __name__ == '__main__':
+    main()
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Best Practices for Modules}
+    \textbf{Do:}
+    \begin{itemize}
+        \item Follow standardized interfaces strictly
+        \item Pin all dependency versions
+        \item Include comprehensive tests
+        \item Document parameters and outputs
+        \item Handle errors gracefully
+        \item Log execution metadata (time, memory)
+        \item Use appropriate random seeds
+    \end{itemize}
+    
+    \vspace{0.3cm}
+    \textbf{Don't:}
+    \begin{itemize}
+        \item Hardcode paths or parameters
+        \item Assume specific working directory
+        \item Modify input data files
+        \item Ignore errors silently
+        \item Use undocumented dependencies
+        \item Skip validation of inputs
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Troubleshooting Common Issues}
+    \textbf{Problem: "Cannot create conda environment"}
+    
+    Solution: Check internet connection, verify conda installation
+    
+    \vspace{0.3cm}
+    \textbf{Problem: "Method execution failed"}
+    
+    Solution: Check logs in \texttt{logs/} directory, verify input format
+    
+    \vspace{0.3cm}
+    \textbf{Problem: "Out of memory"}
+    
+    Solution: Reduce \texttt{--cores}, exclude large datasets, use more RAM
+    
+    \vspace{0.3cm}
+    \textbf{Problem: "Architecture not supported"}
+    
+    Solution: Use amd64 system (won't work on arm64/M1 Macs)
+    
+    \vspace{0.3cm}
+    \textbf{Problem: "Results differ from expected"}
+    
+    Solution: Check random seeds, verify dependency versions
+\end{frame}
+
+\begin{frame}{Advantages of Omnibenchmark}
+    \textbf{For benchmark creators:}
+    \begin{itemize}
+        \item Automated orchestration
+        \item Built-in provenance tracking
+        \item Community contributions
+        \item Continuous updates
+    \end{itemize}
+    
+    \vspace{0.3cm}
+    \textbf{For method developers:}
+    \begin{itemize}
+        \item Fair comparison to existing methods
+        \item No need to reimplement baselines
+        \item Standardized evaluation protocol
+        \item Continuous testing on new data
+    \end{itemize}
+    
+    \vspace{0.3cm}
+    \textbf{For users:}
+    \begin{itemize}
+        \item Up-to-date comparisons
+        \item Reproducible results
+        \item Easy to explore tradeoffs
+        \item Transparent methodology
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Limitations and Considerations}
+    \textbf{Be aware of:}
+    \begin{itemize}
+        \item \textbf{Computational cost}: Full benchmarks can take hours/days
+        \item \textbf{Architecture requirements}: amd64 only (no arm64)
+        \item \textbf{Storage needs}: Results can be large
+        \item \textbf{Complexity}: Steep learning curve for first-time users
+        \item \textbf{Maintenance}: Modules need updates as software evolves
+    \end{itemize}
+    
+    \vspace{0.3cm}
+    \textbf{Not suitable for:}
+    \begin{itemize}
+        \item Quick one-off comparisons (use simpler tools)
+        \item Methods requiring interactive tuning
+        \item Proprietary methods that can't be shared
+    \end{itemize}
+    
+    \vspace{0.3cm}
+    \textbf{Best for:}
+    \begin{itemize}
+        \item Large-scale, ongoing benchmarks
+        \item Community-driven comparisons
+        \item Reproducible research
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Summary}
+    \textbf{Key takeaways:}
+    \begin{itemize}
+        \item Omnibenchmark enables solo and collaborative benchmarking
+        \item Modular design: data, methods, metrics as separate repos
+        \item Clustering example: Complete benchmark with 79+ datasets, 20+ methods
+        \item Running: \texttt{ob run benchmark -b Clustering.yaml --local-storage --cores 6}
+        \item Contributing: Create standardized module in new repository
+        \item Best for large-scale, ongoing benchmarks
+    \end{itemize}
+    
+    \vspace{0.3cm}
+    \textbf{Getting started:}
+    \begin{enumerate}
+        \item Install omnibenchmark: \texttt{pip install omnibenchmark}
+        \item Clone example: \texttt{git clone github.com/omnibenchmark/clustering\_example}
+        \item Try dry-run: \texttt{ob run benchmark -b Clustering.yaml --dry-run}
+        \item Run small test (if resources allow)
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{Resources}
+    \begin{itemize}
+        \item Omnibenchmark website: \texttt{https://omnibenchmark.org}
+        \item Clustering example: \texttt{github.com/omnibenchmark/clustering\_example}
+        \item GitHub organization: \texttt{github.com/omnibenchmark}
+        \item Contact: Issues on GitHub repositories
+    \end{itemize}
+    
+    \vspace{0.3cm}
+    \textbf{Related papers:}
+    \begin{itemize}
+        \item Gagolewski (2022) "Are cluster validity measures (in)valid?"
+        \item See Omnibenchmark documentation for platform papers
+    \end{itemize}
+\end{frame}
+
+\end{document}
