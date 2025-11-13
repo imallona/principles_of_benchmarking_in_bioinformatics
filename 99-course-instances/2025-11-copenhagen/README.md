@@ -87,19 +87,69 @@ ob run benchmark -b Clustering_conda.yml --dry-run --local-storage
 What are methods producing? Is it a vector of partitions? Is it a 2D matrix? 
 
 ```bash
+## list benchmark results
+## notice provenance is explicit and described by folder nesting
 
+tree -a out
+
+## inspect the output of method agglomerative/linkage-average for dataset fcps/atom
+zcat out/data/clustbench/dataset_generator-fcps_dataset_name-atom/clustering/agglomerative/linkage-average/clustbench_ks_range.labels.gz  | head
+
+## inspect the output of all methods for that dataset (fcps/atom)
+##   find ... -exec sh -c '...' sh {} +: runs a shell loop over all found files.
+##   echo "$f": prints the filename.
+##   zcat "$f" | head: shows the first 10 lines of that file.
+##   echo: adds a blank line between files for readability.
+find out/data/clustbench/dataset_generator-fcps_dataset_name-atom/clustering/*/*/ -name 'clustbench_ks_range.labels.gz' \
+     -exec sh -c 'for f; do echo "$f"; zcat "$f" | head; echo; done' sh {} +
+## so a 2D matrix. `k` means the true number of clusters
 ```
 
 Run a single module using `ob run module`.
 
 ```bash
-
+ob run module -b Clustering_conda.yml  -m fastcluster --input_dir out/data/clustbench/dataset_generator-fcps_dataset_name-atom/
 ```
 
 Run a single module without omnibenchmark's CLI, just using the right interpreter, script name, and arguments. Plan to activate the software backend.
 
 ```bash
+## create the environment independently; also helps to update it if needed
+conda env create -f envs/clustbench.yml
 
+## activate the environment (it's nested under omnibenchmark's)
+conda activate clustbench
+echo $PATH
+
+## get (git clone in this case) the repository to try
+##  you might want to change the working directory
+old_path=$(pwd)
+cd
+git clone git@github.com:imallona/clustbench_fastcluster.git
+cd clustbench_fastcluster
+
+## the method already has a help listing its arguments
+python run_fastcluster.py
+
+## create output folder
+mkdir -p manual_run_output
+
+## fill the arguments pointing to appropriate inputs
+python run_fastcluster.py --data.matrix ~/benchmarks/clustering_example/out/data/clustbench/dataset_generator-fcps_dataset_name-atom/clustbench.data.gz \
+       --data.true_labels ~/benchmarks/clustering_example/out/data/clustbench/dataset_generator-fcps_dataset_name-atom/clustbench.labels0.gz \
+       --output_dir manual_run_output \
+       --name test \
+       --linkage complete
+
+## inspect results
+zcat manual_run_output/*gz
+
+## go back to the old working directory
+cd $old_path
+
+## deactivate the current environment (careful, if repeated this could deactivate the omnibenchmark env)
+conda deactivate
+echo $PATH
 ```
 
 ### Add a new module to the clustering example
