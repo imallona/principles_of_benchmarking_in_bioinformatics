@@ -10,12 +10,27 @@ Lectures: 17-18 November 2025, 10.00 – 16.00
 
 TBD
 
+## Config
+
+Create a `tmp` folder within your home, and export the `TMPDIR` accordingly.
+
+```
+mkdir -p ~/tmp
+export TMPDIR=~/tmp
+
+## make changes permanent; caution tilde does not expand to $HOME if noninteractive
+echo 'export TMPDIR=$HOME/tmp' >> ~/.bashrc
+
+# load changes
+source ~/.bashrc
+```
+
 ## Software installations
 
 [Install apptainer, conda, and omnibenchmark using conda](https://docs.omnibenchmark.org/latest/howto/).
 
 
-Mind the exact omnibenchmark version:  `pip install omnibenchmark==0.3.1`.
+Mind the exact omnibenchmark version:  **`pip install omnibenchmark==0.3.2`**.
 
 Test these:
 
