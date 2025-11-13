@@ -50,16 +50,28 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # Create new 'latest' release
-      - name: Create or update 'latest' release
-        uses: softprops/action-gh-release@v1
+      # - name: Create or update 'latest' release
+      #   id: create_release
+      #   uses: softprops/action-gh-release@v1
+      #   with:
+      #     tag_name: latest
+      #     name: Source code
+      #     draft: false
+      #     prerelease: false
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: release
+        uses: actions/create-release@v1
+        id: create_release
         with:
-          tag_name: latest
-          name: Source code
           draft: false
           prerelease: false
+          release_name: latest
+          tag_name: latest
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
+          GITHUB_TOKEN: ${{ github.token }}
+        
       # generate artifacts
       - name: Upload basics PDF
         uses: actions/upload-artifact@v4
@@ -73,17 +85,22 @@ jobs:
           name: omnibenchmark
           path: 06-omnibenchmark/slides/omnibenchmark.pdf
 
-      # download artifacts
-      - name: Download all artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: release-assets
-    
-      # release artifacts
-      - name: Upload PDFs to release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: latest
-          files: release-assets/basics/basics.pdf release-assets/omnibenchmark/omnibenchmark.pdf
+      - name: upload basics
+        uses: actions/upload-release-asset@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: 01-basics/slides/basics.pdf
+          asset_name: basics.pdf
+          asset_content_type: application/pdf
+
+      - name: upload omnibenchmark
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: 06-omnibenchmark/slides/omnibenchmark.pdf
+          asset_name: omnibenchmark.pdf
+          asset_content_type: application/pdf
