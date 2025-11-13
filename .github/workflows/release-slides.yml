@@ -42,29 +42,53 @@ jobs:
           test -f 06-omnibenchmark/slides/omnibenchmark.pdf
 
       # Delete existing 'latest' release and tag as latest
-      - name: Delete existing 'latest' release and tag
+      - name: Delete existing 'slides' release and tag
         uses: dev-drprasad/delete-tag-and-release@v1.1
         with:
-          tag_name: latest
+          tag_name: slides
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # Create new 'latest' release
-      - name: Create or update 'latest' release
-        uses: softprops/action-gh-release@v1
+      - name: release
+        uses: actions/create-release@v1
+        id: create_release
         with:
-          tag_name: latest
-          name: Source code
           draft: false
           prerelease: false
+          release_name: slides
+          tag_name: slides
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # Upload all PDFs to release
-      - name: Upload PDFs to release
-        uses: softprops/action-gh-release@v1
+          GITHUB_TOKEN: ${{ github.token }}
+        
+      # generate artifacts
+      - name: Upload basics PDF
+        uses: actions/upload-artifact@v4
         with:
-          tag_name: latest
-          files: 01-basics/slides/basics.pdf 06-omnibenchmark/slides/omnibenchmark.pdf
+          name: basics
+          path: 01-basics/slides/basics.pdf
+
+      - name: Upload omnibenchmark PDF
+        uses: actions/upload-artifact@v4
+        with:
+          name: omnibenchmark
+          path: 06-omnibenchmark/slides/omnibenchmark.pdf
+
+      - name: upload basics slides
+        uses: actions/upload-release-asset@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: 01-basics/slides/basics.pdf
+          asset_name: basics.pdf
+          asset_content_type: application/pdf
+
+      - name: upload omnibenchmark slides
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: 06-omnibenchmark/slides/omnibenchmark.pdf
+          asset_name: omnibenchmark.pdf
+          asset_content_type: application/pdf

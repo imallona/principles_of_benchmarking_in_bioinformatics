@@ -8,8 +8,7 @@ This teaching unit provides an introduction to fundamental concepts in benchmark
 
 To download the slides:
 - The slides are automatically compiled via GitHub Actions on pull requests
-- Compiled PDFs are available as artifacts in the Actions tab
-- You can also trigger a manual build using the "Build LaTeX Slides" workflow
+- PDF slides are available at https://github.com/imallona/principles_of_benchmarking_in_bioinformatics/releases
 
 To compile them locally (using LaTeX):
 
@@ -32,12 +31,6 @@ A structured Q&A document with 25+ questions covering all topics from the slides
 
 - Basic Linux command line experience
 - Access to a Linux system (preferably amd64 architecture)
-
-## Duration
-
-This unit is designed to be covered in approximately:
-- 90-120 minutes for lecture (slides)
-- 120-180 minutes for exercises and hands-on practice
 
 ## Additional Resources
 

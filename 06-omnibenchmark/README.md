@@ -8,8 +8,7 @@ This teaching unit provides an introduction to fundamental concepts in benchmark
 
 To download the slides:
 - The slides are automatically compiled via GitHub Actions on pull requests
-- Compiled PDFs are available as artifacts in the Actions tab
-- You can also trigger a manual build using the "Build LaTeX Slides" workflow
+- PDF slides are available at https://github.com/imallona/principles_of_benchmarking_in_bioinformatics/releases
 
 To compile them locally (using LaTeX):
 

@@ -29,6 +29,8 @@ Self-contained units (from `01-basics` to `06-omnibenchmark`) plus workshop inst
 ├── 05-openebench
 │   └── TO-DO.md
 ├── 06-omnibenchmark             # Omnibenchmark and clustbench
+│   ├── slides/                  # LaTeX beamer presentations
+│   │   └── omnibenchmark.tex
 │   ├── exercises
 │   │   ├── exercises.md
 ├── 99-course-instances          # Workshops 
@@ -51,10 +53,9 @@ Introduction to fundamental bioinformatics concepts:
 
 See [01-basics/README.md](01-basics/README.md) for details.
 
-Compiled PDF slides are automatically built via GitHub Actions and available as artifacts:
-1. Go to the [Actions tab](../../actions)
-2. Click on the latest "Build LaTeX Slides" workflow run
-3. Download the `basics-slides-pdf` artifact
+Compiled PDF slides are automatically built via GitHub Actions and available as releases.
+
+https://github.com/imallona/principles_of_benchmarking_in_bioinformatics/releases
 
 Slides can be built using LaTeX (pdflatex):
 
@@ -70,10 +71,9 @@ Solo benchmarking with omnibenchmark.
 
 See [06-omnibenchmark/README.md](06-omnibenchmark/README.md) for details.
 
-Compiled PDF slides are automatically built via GitHub Actions and available as artifacts:
-1. Go to the [Actions tab](../../actions)
-2. Click on the latest "Build LaTeX Slides" workflow run
-3. Download the `omnibenchmark-slides-pdf` artifact
+Compiled PDF slides are automatically built via GitHub Actions and available as releases.
+
+https://github.com/imallona/principles_of_benchmarking_in_bioinformatics/releases
 
 Slides can be built using LaTeX (pdflatex):
 
