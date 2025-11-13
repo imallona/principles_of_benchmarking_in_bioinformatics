@@ -33,7 +33,7 @@ ob --version
 Get the clustbench manifest by cloning the clustbench repository at https://github.com/omnibenchmark/clustering_example .
 
 ```bash
-cd
+cd  # this goes to your $HOME
 mkdir benchmarks
 cd $_
 git clone git@github.com:omnibenchmark/clustering_example.git
@@ -108,6 +108,7 @@ zcat out/data/clustbench/dataset_generator-fcps_dataset_name-atom/clustering/agg
 
 ## inspect the output of all methods for that dataset (fcps/atom)
 ##   find ... -exec sh -c '...' sh {} +: runs a shell loop over all found files.
+##     also noticed the asterisk in the directory path - a way to search all methods run on a given dataset
 ##   echo "$f": prints the filename.
 ##   zcat "$f" | head: shows the first 10 lines of that file.
 ##   echo: adds a blank line between files for readability.
@@ -164,19 +165,19 @@ zcat manual_run_output/*gz
 ## go back to the old working directory
 cd $old_wd
 
-## make sure clustbench is still topleft
+## make sure clustbench is still leftmost
 echo $PATH
 
-## deactivate the current environment (middfully, if repeated this could deactivate the omnibenchmark env)
+## deactivate the current environment (mindfully, if repeated this could deactivate the omnibenchmark env)
 conda deactivate
 
-## make sure the omnibenchmark environment is still there (top left)
+## make sure the omnibenchmark environment is still there (leftmost)
 echo $PATH
 ```
 
 ### Un-comment some modules from the clustering example
 
-And re-evaluate the benchmark scope
+Uncomment some of the modules (enabling them), save the YAML, and re-evaluate the benchmark scope (that is, `ob run benchmark` with a dry run and not an actual run. Are the new modules incorporated in the new plan? are some of the results cached? why?
 
 ```bash
 ## uncomment (i.e., effectively add) some modules to the `Clustering_conda.yml`
