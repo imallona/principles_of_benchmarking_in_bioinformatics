@@ -4,11 +4,37 @@ Blegdamsvej 3B, Copenhagen
 
 Lectures: 17-18 November 2025, 10.00 – 16.00
 
+# Philosophy
+
+Please ask questions. If something feels broken it might be: let us know so we can fix it.
+
+You can compute in a dedicated Linux server but also in your laptop *if it runs a Linux on amd64*. (Our instructions assume `apt`-based distributions.)
+
+We aim to go through these exercises while also running a basic recap session on files, workflows and software management strategies in benchmarking of bioinformatics tools; plus Omnibenchmark. [This repository](https://github.com/imallona/principles_of_benchmarking_in_bioinformatics) contains longer units with extra exercises and slides about these; running these exercises is not mandatory (it might be interesting if you get bored during lectures).
+
+The main documentation is https://docs.omnibenchmark.org/latest/.
+
+Please fill three short feedback forms:
+- [17th Nov](https://forms.gle/KCUr9f1RF5KqYNQJ6)
+- [18th Nov](https://forms.gle/k7ZDMvVWY8FaM2SZ9)
+- end of the course
+
+## Clustbench resources
+
+To understand the exercises' clustering benchmark by Marek Gagolewski's:
+- [clustbench documentation (omnibenchmark-free)](https://clustering-benchmarks.gagolewski.com/index.html)
+- [Datasets](https://clustering-benchmarks.gagolewski.com/weave/data-v1.html#wut/circles)
+- [Gagolewski M., A framework for benchmarking clustering algorithms, SoftwareX 20, 2022, 101270](linkinghub.elsevier.com/retrieve/pii/S2352711022001881)
+
 # Exercises
 
 ## Login details
 
-TBD
+Info shared elsewhere: in short, `ssh`-able Linux server on amd64 architecture.
+
+Recommendation: `ssh-copy-id` your key to ease log in, and use `tmux` to run long-ish benchmarks, installations or tests.
+
+Please monitor resource usage with `top`, `vmstat`, `free`, `df` etc.
 
 ## Config
 
@@ -27,9 +53,42 @@ source ~/.bashrc
 
 ## Software installations
 
-[Install apptainer, conda, and omnibenchmark using conda](https://docs.omnibenchmark.org/latest/howto/).
+[Install conda, and omnibenchmark using conda](https://docs.omnibenchmark.org/latest/howto/). Apptainer is already installed.
 
 Mind installing the exact omnibenchmark version:  **`pip install omnibenchmark==0.3.2`**. **Also install the storage-related requirements with `pip install omnibenchmark[s3]`**.
+
+Short instructions to install:
+
+```bash
+mkdir -p soft
+cd soft
+
+# download installation script
+# this assumes our server; if not, select another script from https://conda-forge.org/miniforge/
+wget https://github.com/conda-forge/miniforge/releases/download/25.3.1-0/Miniforge3-25.3.1-0-Linux-x86_64.sh
+
+chmod +x *sh
+./Miniforge3-25.3.1-0-Linux-x86_64.sh
+## read and accept the EULA, install with defaults and, ideally, do not modify your .bashrc to activate conda base on login
+
+# activate conda base environment
+#  (unless you decided to have it activated by default and your prompt start with (base))
+source ~/miniforge3/bin/activate
+```
+
+Now, install omnibenchmark
+
+```bash
+
+curl -sSL https://raw.githubusercontent.com/omnibenchmark/omnibenchmark/main/omni-environment.yml -o omni-environment.yml
+
+conda create -n omnibenchmark python=3.12 -y
+conda activate omnibenchmark
+conda env update -f omni-environment.yml
+
+pip install omnibenchmark[s3] ## this is to make sure the object storage dependencies are installed
+
+```
 
 Test these:
 
@@ -48,15 +107,15 @@ Get the clustbench manifest by cloning the clustbench repository at https://gith
 
 ```bash
 cd  # this goes to your $HOME
-mkdir benchmarks
-cd $_
-git clone git@github.com:omnibenchmark/clustering_example.git
+mkdir -p benchmarks
+cd benchmarks
+git clone https://github.com/omnibenchmark/clustering_example
 cd clustering_example
 ```
 
 ### Plot topology
 
-Plot clustbench's topology.
+Print clustbench's topology (in [mermaid](https://mermaid.js.org/) format) and visualize it with a mermaid renderer.
 
 ```bash
 ob info topology -b Clustering_conda.yml
@@ -76,11 +135,13 @@ ob info topology -b Clustering_conda.yml
 
 ```bash
 ## conda envs are recipes using conda-forge and bioconda
+##  question: when to use nodefaults, conda-forge, and defaults?
 grep conda Clustering_conda.yml
 ls -l envs
 head -100 envs/*yml
 
 ## apptainer images are downloaded from a registry, but recipes are available
+###  question: what is an ORAS registry?
 grep apptainer Clustering_oras.yml
 head envs/build_singularity.sh
 head envs/*def
@@ -92,6 +153,9 @@ Dry-run the full `Clustering_conda.yml` benchmark.
 
 ```bash
 ## local-storage means results will be stored locally
+##  no it really doesn't matter, because this is a dry run, but for actual runs
+##  we don't want to store results in a S3 bucket (yet)
+##  hence the argument
 ob run benchmark -b Clustering_conda.yml --dry-run --local-storage
 ```
 
@@ -106,10 +170,10 @@ ob run benchmark -b Clustering_oras.yml --dry-run --local-storage
 Run the clustbench using conda or apptainer.
 
 ```bash
-ob run benchmark -b Clustering_conda.yml --dry-run --local-storage
+ob run benchmark -b Clustering_conda.yml --cores 1 --local-storage
 ```
 
-What are methods producing? Is it a vector of partitions? Is it a 2D matrix? 
+What is omnibenchmark producing? What is the output (`out` folder) structure? Are methods results a vector of partitions? or 2D matrices? why?
 
 ```bash
 ## list benchmark results
@@ -144,6 +208,8 @@ ob run module -b Clustering_conda.yml  -m fastcluster --input_dir out/data/clust
 Run a single module without omnibenchmark's CLI, just using the right interpreter, script name, and arguments. Plan to activate the software backend.
 
 ```bash
+## please do not copy, paste and run as a chunk, but line by line instead
+
 ## create the environment independently; also helps to update it if needed
 conda env create -f envs/clustbench.yml
 
@@ -157,7 +223,7 @@ echo $PATH
 ##  you might want to change the working directory
 old_wd=$(pwd)
 cd
-git clone git@github.com:imallona/clustbench_fastcluster.git
+git clone https://github.com/imallona/clustbench_fastcluster
 cd clustbench_fastcluster
 
 ## the method already has a help listing its arguments
@@ -256,19 +322,12 @@ Please consider also adding a `--seed` argument to set the random seed.
    - Mistake: Silent failures
    - Solution: Catch exceptions, log errors, return error codes
 
-
-#### Debugging
-
 ### Plan your own omnibenchmark
 
-#### Input/output formats
+Lecture and groups discussion on benchmark topologies *plus workflow constraints*:
 
-#### Software environments
-
-#### Stages vs modules
-
-#### Running locally or on HPC
-
-#### Sharing results
-
-#### Collaborative coding
+1. Stages contain modules sharing input/output file formats and shapes (in syntax but also in semantics)
+2. Modules might group several methods if they share software environments; or could be fully atomic (one module == one repository == one method)
+3. Using Slurm
+4. Using S3 object storage
+5. How to collaboratively code with other users
