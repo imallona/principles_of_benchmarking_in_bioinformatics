@@ -29,8 +29,7 @@ source ~/.bashrc
 
 [Install apptainer, conda, and omnibenchmark using conda](https://docs.omnibenchmark.org/latest/howto/).
 
-
-Mind the exact omnibenchmark version:  **`pip install omnibenchmark==0.3.2`**.
+Mind installing the exact omnibenchmark version:  **`pip install omnibenchmark==0.3.2`**. **Also install the storage-related requirements with `pip install omnibenchmark[s3]`**.
 
 Test these:
 
