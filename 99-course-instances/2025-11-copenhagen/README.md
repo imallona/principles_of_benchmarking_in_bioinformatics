@@ -4,13 +4,27 @@ Blegdamsvej 3B, Copenhagen
 
 Lectures: 17-18 November 2025, 10.00 – 16.00
 
-# Feedback
+# Philosophy
 
-Please ask questions and report bugs.
+Please ask questions. If something feels broken it might be: let us know so we can fix it.
+
+You can compute in a dedicated Linux server but also in your laptop *if it runs a Linux on amd64*. (Our instructions assume `apt`-based distributions.)
+
+We aim to go through these exercises while also running a basic recap session on files, workflows and software management strategies in benchmarking of bioinformatics tools; plus Omnibenchmark. [This repository](https://github.com/imallona/principles_of_benchmarking_in_bioinformatics) contains longer units with extra exercises and slides about these; running these exercises is not mandatory (it might be interesting if you get bored during lectures).
+
+The main documentation is https://docs.omnibenchmark.org/latest/.
+
 Please fill three short feedback forms:
 - [17th Nov](https://forms.gle/KCUr9f1RF5KqYNQJ6)
 - [18th Nov](https://forms.gle/k7ZDMvVWY8FaM2SZ9)
 - end of the course
+
+## Clustbench resources
+
+To understand the exercises' clustering benchmark by Marek Gagolewski's:
+- [clustbench documentation (omnibenchmark-free)](https://clustering-benchmarks.gagolewski.com/index.html)
+- [Datasets](https://clustering-benchmarks.gagolewski.com/weave/data-v1.html#wut/circles)
+- [Gagolewski M., A framework for benchmarking clustering algorithms, SoftwareX 20, 2022, 101270](linkinghub.elsevier.com/retrieve/pii/S2352711022001881)
 
 # Exercises
 
@@ -18,7 +32,9 @@ Please fill three short feedback forms:
 
 Info shared elsewhere: in short, `ssh`-able Linux server on amd64 architecture.
 
-Recommendation: `ssh-copy-id` to ease log in, and use `tmux`.
+Recommendation: `ssh-copy-id` your key to ease log in, and use `tmux` to run long-ish benchmarks, installations or tests.
+
+Please monitor resource usage with `top`, `vmstat`, `free`, `df` etc.
 
 ## Config
 
