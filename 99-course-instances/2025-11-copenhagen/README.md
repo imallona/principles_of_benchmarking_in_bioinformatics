@@ -55,7 +55,7 @@ source ~/.bashrc
 
 [Install conda, and omnibenchmark using conda](https://docs.omnibenchmark.org/latest/howto/). Apptainer is already installed.
 
-Mind installing the exact omnibenchmark version:  **`pip install omnibenchmark==0.3.2`**. **Also install the storage-related requirements with `pip install omnibenchmark[s3]`**.
+Mind installing the exact omnibenchmark version:  **`pip install omnibenchmark==0.3.2`**. **Also install the storage-related requirements with `pip install 'omnibenchmark[s3]'`**.
 
 Short instructions to install:
 
@@ -86,7 +86,7 @@ conda create -n omnibenchmark python=3.12 -y
 conda activate omnibenchmark
 conda env update -f omni-environment.yml
 
-pip install omnibenchmark[s3] ## this is to make sure the object storage dependencies are installed
+pip install 'omnibenchmark[s3]' ## this is to make sure the object storage dependencies are installed
 
 ```
 
