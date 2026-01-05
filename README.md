@@ -6,8 +6,8 @@ Bias disclaimer: authors are developers of Omnibenchmark (since inception, 2019)
 
 ## TL/DR
 
-For Muerren 8-9 Jan 2026: [exercises](99-course-instances/2026-01-muerren/README.md).
-For Denmark 17-18 Nov 2025: [exercises](99-course-instances/2025-11-copenhagen/README.md).
+- For Muerren 8-9 Jan 2026: [exercises](99-course-instances/2026-01-muerren/README.md).
+- For Denmark 17-18 Nov 2025: [exercises](99-course-instances/2025-11-copenhagen/README.md).
 
 ## Repository structure
 
