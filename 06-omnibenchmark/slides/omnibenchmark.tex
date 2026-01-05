@@ -60,7 +60,8 @@
 \end{frame}
 
 \begin{frame}{What is Omnibenchmark?}
-    \textbf{Omnibenchmark} is a CLI to facilitate solo and collaborative benchmarking
+  \textbf{Omnibenchmark} is a CLI to facilitate solo and collaborative benchmarking \\
+
     \textbf{Key features:}
     \begin{itemize}
         \item \textbf{Modular}: Distributed modules in separate repositories
@@ -172,7 +173,7 @@
 
 \begin{frame}[fragile]{Installation}
 \begin{lstlisting}[language=bash]
-# 1. Install omnibenchmark
+# 1. Install omnibenchmark (mind you can pin specific versions, e.g. pip install omnibenchmark==0.3.0 instead)
 pip install omnibenchmark
 
 
@@ -209,13 +210,16 @@ ls -la
 \begin{frame}[fragile]{Running the Benchmark}
 \begin{lstlisting}[language=bash]
 # Basic run (2 cores, local storage)
+# legacy ob < 0.4.0
 ob run benchmark -b Clustering.yaml --local-storage --cores 2
+## ob >= 0.4.0
+ob run Clustering.yaml --cores 2
 
 # Options:
 # -b, --benchmark: Path to configuration YAML
-# --local-storage: Store results locally (not S3)
+# --local-storage: Store results locally; default in ob >= 0.4.0
 # --cores: Number of parallel processes
-# --dry-run: Show what would be executed without running
+# --dry-run: # use --dry instead on ob >= 0.4.0
 
 # Faster (more concurrent tasks)
 ob run benchmark -b Clustering.yaml --local-storage --cores 10
@@ -230,10 +234,10 @@ ob run benchmark -b Clustering.yaml --local-storage --cores 10
     
     \vspace{0.3cm}
     \begin{itemize}
-        \item \textbf{Conda} (default): Python package management
+        \item \textbf{Conda} (default): conda nondefaults + bioconda recipes
             \begin{itemize}
-                \item Config: \texttt{Clustering.yaml}
-                \item Best for: Local development, standard packages
+                \item Config: \texttt{Clustering\_conda.yaml}
+                \item Best for: Local development
             \end{itemize}
         
         \item \textbf{Apptainer/Singularity}: Containers
@@ -448,7 +452,9 @@ top
     \end{enumerate}
     
     \vspace{0.3cm}
-    \textbf{Documentation:} \texttt{https://docs.omnibenchmark.org/latest/howto/}
+    \textbf{Documentation:} \texttt{https://docs.omnibenchmark.org/latest/howto/} \\
+    \vspace{0.3cm}
+    \textbf{Tip:} For ob $\ge$ 0.4.0 use \texttt{ob create module} to scaffold the repository
     
 \end{frame}
 
@@ -535,9 +541,8 @@ if __name__ == '__main__':
     \textbf{Getting started:}
     \begin{enumerate}
         \item Install omnibenchmark: \texttt{pip install omnibenchmark}
-        \item Clone example: \texttt{git clone github.com/omnibenchmark/clustering\_example}
-        \item Try dry-run: \texttt{ob run benchmark -b Clustering.yaml --dry-run}
-        \item Run
+        \item Clone example: \texttt{git clone https://github.com/omnibenchmark/clustering\_example}
+        \item Try a dry-run: \texttt{ob run benchmark -b Clustering.yaml --dry-run} (ob < 0.4.0) or \texttt{ob run -b Clustering.yaml --dry} (ob $\ge$ 0.4.0)
     \end{enumerate}
 \end{frame}
 

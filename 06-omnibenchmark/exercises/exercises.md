@@ -1,5 +1,7 @@
 # Omnibenchmark - Exercises
 
+These exercises follow the CLI conventions for omnibenchmark versions older than and excluding 0.4.0.
+
 ## Questions and Answers
 
 ### Section 1: Omnibenchmark overview

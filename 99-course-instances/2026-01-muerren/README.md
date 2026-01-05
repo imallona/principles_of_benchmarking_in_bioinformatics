@@ -1,6 +1,12 @@
 # Location and plan
 
-Workshop: 8-9th January 2026
+Workshop: 8-9th January 2026.
+Location: Muerren, CH.
+
+# Warning
+
+> [!IMPORTANT]  
+> These exercises and tutorial apply to `omnibenchmark` 0.4.0rc1.
 
 # Philosophy
 
@@ -8,9 +14,7 @@ Please ask questions. If something feels broken it might be: let us know so we c
 
 You can compute in a dedicated Linux server but also in your laptop *if it runs a Linux on amd64*. (Our instructions assume `apt`-based distributions.)
 
-We aim to go through these exercises while also running a basic recap session on files, workflows and software management strategies in benchmarking of bioinformatics tools; plus Omnibenchmark. [This repository](https://github.com/imallona/principles_of_benchmarking_in_bioinformatics) contains longer units with extra exercises and slides about these; running these exercises is not mandatory (it might be interesting if you get bored during lectures).
-
-The main documentation is https://docs.omnibenchmark.org/latest/.
+The main documentation is https://omnibenchmark--241.org.readthedocs.build/241/tutorial/. **Notice the standard https://docs.omnibenchmark.org/latest/ docs apply to 0.3.0 and ship different commands.**.
 
 ## Clustbench resources
 
@@ -23,7 +27,7 @@ To understand the exercises' clustering benchmark by Marek Gagolewski's:
 
 ## Monitoring
 
-Use sherborne, barbara, taupo... any `ssh`-able Linux server on amd64 architecture. Or a local laptop, if amd64.
+Use sherborne, barbara, taupo... any `ssh`-able Linux server on amd64 architecture. Or a local laptop, if `amd64`.
 
 Recommendation: `ssh-copy-id` your key to ease log in, and use `tmux` to run long-ish benchmarks, installations or tests.
 
@@ -89,6 +93,14 @@ Test conda, singularity and omnibenchmark (`ob`):
 conda --version
 apptainer --version
 ob --version
+```
+
+## The omnibenchmark suite
+
+Explore the omnibenchmark commands with:
+
+```bash
+ob --help
 ```
 
 ## The clustering example (clustbench)
