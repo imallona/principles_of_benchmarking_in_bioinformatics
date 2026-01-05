@@ -73,17 +73,16 @@ Now, install omnibenchmark
 
 ```bash
 
-curl -sSL https://raw.githubusercontent.com/omnibenchmark/omnibenchmark/main/omni-environment.yml -o omni-environment.yml
+curl -sSL https://raw.githubusercontent.com/omnibenchmark/omnibenchmark/refs/tags/0.4.0rc1/omni-environment.yml
 
 conda create -n omnibenchmark python=3.12 -y
 conda activate omnibenchmark
 conda env update -f omni-environment.yml
-
-pip install omnibenchmark[s3] ## this is to make sure the object storage dependencies are installed
+pip install omnibenchmark==0.4.0rc1
 
 ```
 
-Test these:
+Test conda, singularity and omnibenchmark (`ob`):
 
 ```bash
 
@@ -111,7 +110,7 @@ cd clustering_example
 Print clustbench's topology (in [mermaid](https://mermaid.js.org/) format) and visualize it with a mermaid renderer.
 
 ```bash
-ob info topology -b Clustering_conda.yml
+ob describe topology -b Clustering_conda.yml
 ```
 
 
@@ -145,17 +144,13 @@ head envs/*def
 Dry-run the full `Clustering_conda.yml` benchmark. 
 
 ```bash
-## local-storage means results will be stored locally
-##  no it really doesn't matter, because this is a dry run, but for actual runs
-##  we don't want to store results in a S3 bucket (yet)
-##  hence the argument
-ob run benchmark -b Clustering_conda.yml --dry-run --local-storage
+ob run Clustering_conda.yml --dry
 ```
 
 Dry-run the `Clustering_oras.yml`.
 
 ```bash
-ob run benchmark -b Clustering_oras.yml --dry-run --local-storage
+ob run  Clustering_oras.yml --dry
 ```
 
 ### Run benchmark
@@ -163,7 +158,7 @@ ob run benchmark -b Clustering_oras.yml --dry-run --local-storage
 Run the clustbench using conda or apptainer.
 
 ```bash
-ob run benchmark -b Clustering_conda.yml --cores 1 --local-storage
+ob run Clustering_conda.yml --cores 1
 ```
 
 What is omnibenchmark producing? What is the output (`out` folder) structure? Are methods results a vector of partitions? or 2D matrices? why?
@@ -193,7 +188,7 @@ find out/data/clustbench/dataset_generator-fcps_dataset_name-atom/clustering/*/*
 Run a single module using `ob run module`.
 
 ```bash
-ob run module -b Clustering_conda.yml  -m fastcluster --input_dir out/data/clustbench/dataset_generator-fcps_dataset_name-atom/
+ob run Clustering_conda.yml  -m fastcluster --input-dir out/data/clustbench/dataset_generator-fcps_dataset_name-atom/
 ```
 
 ### Run module manually (ideal for development)
@@ -256,7 +251,7 @@ Uncomment some of the modules (enabling them), save the YAML, and re-evaluate th
 ## uncomment (i.e., effectively add) some modules to the `Clustering_conda.yml`
 ## then, dry run
 
-ob run benchmark -b Clustering_conda.yml --local-storage --dry-run
+ob run Clustering_conda.yml --dry
 
 ```
 
@@ -280,6 +275,8 @@ Please consider also adding a `--seed` argument to set the random seed.
 4. Test the method locally.
 5. Fork `clustering_example` and update the YAML to incorporate the new method.
 6. Dry run the updated benchmark.
+
+Tip: use `ob create module`.
 
 #### Common pitfalls
 
@@ -324,3 +321,5 @@ Lecture and groups discussion on benchmark topologies *plus workflow constraints
 3. Using Slurm
 4. Using S3 object storage
 5. How to collaboratively code with other users
+
+Tip: use `ob create benchmark`.
